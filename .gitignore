@@ -30,8 +30,10 @@ yarn-error.log*
 # QA + dev tooling (regenerated locally)
 /screens/
 /scripts/*
-# — except the commit-time corruption guard, which must survive a clone
+# — except the commit-time corruption guard and the prebuild asset gate,
+# which must survive a clone
 !/scripts/check-control-bytes.mjs
+!/scripts/verify-assets.mjs
 
 # client work — not part of the portfolio site
 /proposal/
