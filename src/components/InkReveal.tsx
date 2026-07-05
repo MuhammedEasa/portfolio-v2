@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { gsap } from "@/lib/gsap";
 import { useHall } from "@/lib/theme";
 
 /** Words darken from quiet to ink at the reader's scroll pace; never below AA contrast. */

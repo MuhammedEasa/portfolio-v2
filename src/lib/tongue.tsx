@@ -23,8 +23,11 @@ export const useTongue = () => useContext(TongueContext);
 export function TongueProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLang] = useState<Lang>("en");
 
-  // Adopt what the pre-hydration script decided.
+  // Adopt what the pre-hydration script decided. Deliberate one-shot adoption:
+  // the server must render English so hydration matches, then state catches
+  // up to the lang the inline script already set.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (document.documentElement.lang === "ar") setLang("ar");
   }, []);
 

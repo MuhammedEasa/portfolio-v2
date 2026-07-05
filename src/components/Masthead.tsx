@@ -50,6 +50,13 @@ export default function Masthead() {
   const [open, setOpen] = useState(false);
   const lastY = useRef(0);
 
+  // A turned page closes the menu — state adjusted during render, not in an effect.
+  const [prevPath, setPrevPath] = useState(pathname);
+  if (prevPath !== pathname) {
+    setPrevPath(pathname);
+    setOpen(false);
+  }
+
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
@@ -62,10 +69,6 @@ export default function Masthead() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
 
   const pill = `rounded-full border transition-[background-color,border-color,box-shadow] duration-700 ${
     settled

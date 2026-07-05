@@ -44,6 +44,20 @@ export function nextLeaf(current: string) {
 }
 
 /* ------------------------------------------------------------------ */
+/*  The missing leaf (404)                                             */
+/* ------------------------------------------------------------------ */
+
+export const missingLeaf = {
+  mark: { en: "404", ar: "٤٠٤" } as Bi,
+  title: { en: "This leaf is not in the book.", ar: "هذه الورقة ليست في الكتاب." } as Bi,
+  body: {
+    en: "The page you asked for was never bound — or has been cut from this edition.",
+    ar: "الصفحة التي طلبتها لم تُجلَّد قط — أو اقتُطعت من هذه الطبعة.",
+  } as Bi,
+  home: { en: "Return to the frontispiece", ar: "عُد إلى الديباجة" } as Bi,
+};
+
+/* ------------------------------------------------------------------ */
 /*  Interface words                                                    */
 /* ------------------------------------------------------------------ */
 

@@ -1,18 +1,24 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
+
+const subscribePointer = (onChange: () => void) => {
+  const coarse = window.matchMedia("(pointer: coarse)");
+  coarse.addEventListener("change", onChange);
+  return () => coarse.removeEventListener("change", onChange);
+};
 
 /** Custom cursor: inked dot + trailing ring; elements speak via [data-cursor]. */
 export default function Quill() {
-  const [enabled, setEnabled] = useState(false);
+  // Fine pointers only; the server renders nothing and hydration corrects it.
+  const enabled = useSyncExternalStore(
+    subscribePointer,
+    () => !window.matchMedia("(pointer: coarse)").matches,
+    () => false
+  );
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    if (window.matchMedia("(pointer: coarse)").matches) return;
-    setEnabled(true);
-  }, []);
 
   useEffect(() => {
     if (!enabled) return;

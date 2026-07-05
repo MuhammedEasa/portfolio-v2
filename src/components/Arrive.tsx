@@ -1,7 +1,7 @@
 "use client";
 
-import { createElement, useEffect, useRef, type ReactNode } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { useEffect, useRef, type ElementType, type ReactNode, type RefObject } from "react";
+import { gsap } from "@/lib/gsap";
 import { onVestibuleLifted } from "@/lib/vestibule";
 
 type ArriveProps = {
@@ -81,5 +81,16 @@ export default function Arrive({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return createElement(as, { ref, className, "data-arrive": "" }, children);
+  const Tag: ElementType = as;
+  return (
+    <Tag
+      // Polymorphic ref: TS demands the intersection of every element's ref
+      // type; the runtime value is one plain RefObject. The cast is sound.
+      ref={ref as unknown as RefObject<never>}
+      className={className}
+      data-arrive=""
+    >
+      {children}
+    </Tag>
+  );
 }

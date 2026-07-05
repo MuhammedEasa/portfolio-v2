@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { gsap } from "@/lib/gsap";
 
 /** Vertical scrub parallax; speed 0.1–0.2 for headlines, less for support. */
 export default function Drift({

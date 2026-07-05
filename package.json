@@ -7,7 +7,7 @@
     "prebuild": "node scripts/verify-assets.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "vitest run",
     "prepare": "node .githooks/install.mjs"
   },
@@ -29,6 +29,8 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.10",
     "jsdom": "^29.1.1",
     "lighthouse": "^13.4.0",
     "playwright": "^1.60.0",

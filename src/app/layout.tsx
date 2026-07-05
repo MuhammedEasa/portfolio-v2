@@ -64,10 +64,11 @@ export const metadata: Metadata = {
     url: "https://muhammedeasa.com",
     siteName: "Muhammed Easa",
     locale: "en_US",
+    alternateLocale: "ar_AE",
     type: "website",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Muhammed Easa — Full-Stack Engineer",
     description,
   },

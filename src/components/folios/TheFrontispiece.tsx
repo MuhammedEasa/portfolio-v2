@@ -7,7 +7,7 @@ import Cipher from "@/components/Cipher";
 import Filament from "@/components/Filament";
 import InkReveal from "@/components/InkReveal";
 import TurnLink from "@/components/TurnLink";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { gsap } from "@/lib/gsap";
 import { front, identity, ui, works } from "@/lib/manuscript";
 import { useTongue } from "@/lib/tongue";
 

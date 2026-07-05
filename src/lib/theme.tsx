@@ -15,9 +15,12 @@ export const useHall = () => useContext(ThemeContext);
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [hall, setHall] = useState<Hall>("night");
 
-  // Adopt what the pre-hydration script set.
+  // Adopt what the pre-hydration script set. Deliberate one-shot adoption:
+  // the server must render the default so hydration matches, then state
+  // catches up to the attribute the inline script already applied.
   useEffect(() => {
     if (document.documentElement.getAttribute("data-theme") === "day") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHall("day");
     }
   }, []);
