@@ -91,6 +91,14 @@ All pages prerender statically; only `/api/contact` runs on demand.
 
 ## Testing
 
+- `npm test` (Vitest) — unit tests for the letter form's client validation at
+  its boundaries, the honeypot's hidden/non-tabbable contract, and the form's
+  rendering of every API response state (success, rate-limited, server
+  failure, network failure).
+- A pre-commit hook (installed by `npm install` via `core.hooksPath`) refuses
+  commits whose staged text files contain hidden control bytes — bytes that
+  render invisibly in editors and diffs. Logic lives in
+  `scripts/check-control-bytes.mjs`.
 - `node scripts/visual-check.mjs` (against `npm run start`) — walks every page
   × {en, ar} × {night, day} × {desktop, mobile}, audits the contrast of every
   rendered text node, exercises the letter form in both tongues, and verifies

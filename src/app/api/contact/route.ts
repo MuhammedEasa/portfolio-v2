@@ -37,6 +37,10 @@ const escapeHtml = (s: string) =>
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 
+// Header values must stay on one line — strip CR/LF and other control
+// characters so a crafted name cannot smuggle extra headers into the subject.
+const stripHeaderBreaks = (s: string) => s.replace(/[\u0000-\u001f\u007f]+/g, " ").trim();
+
 export async function POST(req: Request) {
   let body: unknown;
   try {
@@ -84,7 +88,7 @@ export async function POST(req: Request) {
     from: `Portfolio Correspondence <${from}>`,
     to,
     replyTo: email,
-    subject: `Correspondence from ${name}`,
+    subject: `Correspondence from ${stripHeaderBreaks(name)}`,
     html: `
       <div style="background:#13100b;padding:48px 24px;font-family:Georgia,'Times New Roman',serif;">
         <div style="max-width:560px;margin:0 auto;border:1px solid rgba(232,223,201,0.25);padding:40px;">

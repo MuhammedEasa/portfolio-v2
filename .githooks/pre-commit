@@ -1,0 +1,4 @@
+#!/bin/sh
+# Refuse commits containing hidden control bytes in staged text files.
+# Installed via `npm install` (the prepare script sets core.hooksPath here).
+node "$(git rev-parse --show-toplevel)/scripts/check-control-bytes.mjs" || exit 1

@@ -1,0 +1,2 @@
+# The pre-commit hook runs under /bin/sh on Unix — CRLF would break the shebang.
+.githooks/pre-commit text eol=lf

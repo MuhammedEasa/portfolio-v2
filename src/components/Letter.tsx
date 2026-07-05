@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { AnimatePresence, motion } from "motion/react";
 import { useState, type FormEvent } from "react";
@@ -10,7 +10,7 @@ type Status = "idle" | "sending" | "sent" | "failed";
 
 type FieldErrors = Partial<Record<"name" | "email" | "message", true>>;
 
-function findFaults(name: string, email: string, message: string): FieldErrors {
+export function findFaults(name: string, email: string, message: string): FieldErrors {
   const faults: FieldErrors = {};
   if (name.trim().length < 2) faults.name = true;
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) faults.email = true;
