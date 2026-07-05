@@ -2,10 +2,12 @@
 
 import { useEffect, useRef } from "react";
 
-/** Hero background film: a muted loop; reduced motion holds the opening frame. */
-
-const FILM_SRC =
-  "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260406_094145_4a271a6c-3869-4f1c-8aa7-aeb0cb227994.mp4";
+/**
+ * Hero background film: a muted loop, self-hosted under /public so no
+ * third-party bucket can silently take the hero down. Reduced motion gets
+ * the poster frame alone — playback never starts, and with preload="none"
+ * no video bytes are fetched for a single held frame.
+ */
 
 export default function HeroFilm() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -13,15 +15,7 @@ export default function HeroFilm() {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const holdFrame = () => {
-        video.currentTime = 0.1;
-      };
-      video.addEventListener("loadedmetadata", holdFrame);
-      return () => video.removeEventListener("loadedmetadata", holdFrame);
-    }
-
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     video.play().catch(() => {});
   }, []);
 
@@ -32,9 +26,9 @@ export default function HeroFilm() {
       muted
       loop
       playsInline
-      autoPlay
-      preload="auto"
-      src={FILM_SRC}
+      preload="none"
+      poster="/hero-poster.webp"
+      src="/hero-film.mp4"
       className="h-full w-full object-cover"
     />
   );
