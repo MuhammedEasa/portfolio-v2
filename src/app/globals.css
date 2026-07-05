@@ -1,0 +1,411 @@
+@import "tailwindcss";
+
+/* Two rooms, no gold: night scriptorium (default) and day reading room.
+   One accent — rubric, the scribe's red. */
+
+:root {
+  --ground: #13100b; /* lampblack with age                            */
+  --panel: #201a11; /* raised surfaces — old leather, dark board     */
+  --veil: #0c0a06; /* recessed bands, the room's far corners        */
+  --ink: #e8dfc9; /* heavy paper, read by lamplight                */
+  --quiet: #a59c84; /* faded marginalia                              */
+  --rubric: #cd7050; /* the scribe's red, aged to terracotta          */
+  --vermilion: #e08a66; /* the same red, freshly dipped — emphasis    */
+  --seal: #8a3a26; /* solid actions: deep red ground                */
+  --seal-hover: #a3492e;
+  --seal-text: #f2e6c9; /* light text on the seal                     */
+  --grain-strength: 0.05;
+}
+
+[data-theme="day"] {
+  --ground: #f7f4ec; /* white laid paper                              */
+  --panel: #fffdf7; /* a fresher leaf laid on top                    */
+  --veil: #ece6d6; /* the table beneath the page                    */
+  --ink: #1d1812; /* iron-gall ink                                 */
+  --quiet: #5d5345; /* annotations, dark enough to read              */
+  --rubric: #9c2f1d; /* rubrication red on white                      */
+  --vermilion: #6f1f10; /* pressed harder — emphasis darkens by day   */
+  --seal: #9c2f1d;
+  --seal-hover: #7a2113;
+  --seal-text: #f7f4ec;
+  --grain-strength: 0.06;
+}
+
+/* Type stacks swap with the writing direction. */
+:root {
+  --serif-stack: var(--font-cormorant), var(--font-amiri), Georgia, serif;
+  --sans-stack: var(--font-hanken), var(--font-plexar), system-ui, sans-serif;
+}
+[dir="rtl"] {
+  --serif-stack: var(--font-amiri), var(--font-cormorant), Georgia, serif;
+  --sans-stack: var(--font-plexar), var(--font-hanken), system-ui, sans-serif;
+}
+
+@theme inline {
+  --color-ground: var(--ground);
+  --color-panel: var(--panel);
+  --color-veil: var(--veil);
+  --color-ink: var(--ink);
+  --color-quiet: var(--quiet);
+  --color-rubric: var(--rubric);
+  --color-vermilion: var(--vermilion);
+  --color-seal: var(--seal);
+  --color-seal-hover: var(--seal-hover);
+  --color-seal-text: var(--seal-text);
+
+  --font-serif: var(--serif-stack);
+  --font-sans: var(--sans-stack);
+
+  --ease-leaf: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* Ground */
+
+html {
+  background: var(--ground);
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+  transition: background-color 0.7s ease, color 0.7s ease;
+}
+
+::selection {
+  background: var(--rubric);
+  color: var(--ground);
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ground);
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--quiet) 60%, transparent);
+}
+
+/* Press feedback; no default tap flash. */
+a,
+button,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:active,
+a:active,
+[role="button"]:active {
+  transition-duration: 0.15s;
+}
+
+/* The pointer is drawn by the site itself on fine pointers */
+@media (pointer: fine) {
+  body,
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  label,
+  [role="button"] {
+    cursor: none;
+  }
+}
+
+/* Paper grain, both rooms */
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 120;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+  opacity: var(--grain-strength);
+  mix-blend-mode: overlay;
+  animation: grain-shift 1.4s steps(4) infinite;
+}
+
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-2%, 3%); }
+  50% { transform: translate(3%, -2%); }
+  75% { transform: translate(-3%, -3%); }
+  100% { transform: translate(0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after {
+    animation: none;
+  }
+}
+
+/* All custom classes live in the components layer so Tailwind utilities
+   (a later layer) can override them — e.g. text-rubric on a voice-whisper. */
+@layer components {
+
+/* Liquid glass, mixed from the room's own ink. */
+.glass-pill {
+  position: relative;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--ink) 3%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: inset 0 1px 1px color-mix(in srgb, var(--ink) 14%, transparent);
+}
+.glass-pill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ink) 45%, transparent) 0%,
+    color-mix(in srgb, var(--ink) 15%, transparent) 20%,
+    transparent 40%,
+    transparent 60%,
+    color-mix(in srgb, var(--ink) 15%, transparent) 80%,
+    color-mix(in srgb, var(--ink) 45%, transparent) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* The film blurs into the page from below; no darkening, only blur. */
+.hero-blur {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  mask-image: linear-gradient(to top, black 0%, transparent 45%);
+  -webkit-mask-image: linear-gradient(to top, black 0%, transparent 45%);
+}
+
+/* Type set over the film keeps its lamplight colours in both rooms,
+   under a film title's soft shadow. */
+.title-card {
+  --ink: #e8dfc9;
+  --quiet: #a59c84;
+  --rubric: #cd7050;
+  --vermilion: #e08a66;
+  text-shadow: 0 1px 24px rgba(0, 0, 0, 0.55), 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+/* Static hero placeholder; the live shader fades in over it. */
+.ink-bed {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.006 0.009' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.6 0.6 0.6 0 -0.45'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E");
+  background-size: cover;
+  opacity: 0.5;
+}
+
+[data-theme="day"] .ink-bed {
+  opacity: 0.16;
+}
+
+/* Type registers */
+
+/* The whisper: hairline grotesque, spread wide. Captions, labels, nav. */
+.voice-whisper {
+  font-family: var(--font-sans);
+  font-weight: 250;
+  font-size: 0.6875rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--quiet);
+}
+
+/* The proclamation: display serif with presence. */
+.voice-display {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+/* Reading prose: serif at body scale. */
+.voice-prose {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.125rem, 1.4vw, 1.375rem);
+  line-height: 1.65;
+  color: color-mix(in srgb, var(--ink) 90%, transparent);
+}
+
+/* Hairlines read thinner on white; the day room sets them a step heavier. */
+[data-theme="day"] .voice-whisper {
+  font-weight: 300;
+}
+
+/* Arabic: no tracking (letters join), taller lines, heavier weights. */
+[dir="rtl"] .voice-whisper {
+  letter-spacing: 0.02em;
+  font-size: 0.8125rem;
+  font-weight: 300;
+}
+[dir="rtl"] .voice-display {
+  line-height: 1.25;
+  letter-spacing: 0;
+  font-weight: 700;
+}
+[dir="rtl"] .voice-prose {
+  line-height: 2;
+}
+
+/* Rubricated drop cap; Latin only. */
+[dir="ltr"] .dropcap::first-letter {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  float: left;
+  font-size: 4.6em;
+  line-height: 0.78;
+  padding: 0.04em 0.12em 0 0;
+  color: var(--rubric);
+}
+
+/* Buttons */
+
+.btn-court {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.6875rem;
+  letter-spacing: 0.32em;
+  text-indent: 0.32em;
+  text-transform: uppercase;
+  padding: 1.15rem 2.6rem;
+  transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease,
+    transform 0.2s ease;
+}
+.btn-court:active {
+  transform: scale(0.965);
+}
+[dir="rtl"] .btn-court {
+  letter-spacing: 0.02em;
+  text-indent: 0;
+  font-size: 0.875rem;
+}
+.btn-court--solid {
+  background: var(--seal);
+  color: var(--seal-text);
+}
+.btn-court--solid:hover {
+  background: var(--seal-hover);
+}
+.btn-court--ghost {
+  border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  color: var(--ink);
+}
+.btn-court--ghost:hover {
+  border-color: color-mix(in srgb, var(--ink) 55%, transparent);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+
+/* Faint ruled line, as drawn to guide a scribe's hand */
+.rule-ink {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, var(--ink) 35%, transparent) 18%,
+    color-mix(in srgb, var(--ink) 35%, transparent) 82%,
+    transparent
+  );
+}
+
+/* Reveal staging. CSS failsafe so nothing stays invisible if GSAP never reaches it; 0.001 (not 0) so the browser paints it and LCP counts first paint. */
+
+[data-arrive] {
+  opacity: 0.001;
+  animation: arrive-regardless 0.9s ease 1.8s forwards;
+}
+
+@keyframes arrive-regardless {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Self-drawing underline for inline links; origin follows dir. */
+.link-rubric {
+  position: relative;
+  color: var(--ink);
+  transition: color 0.5s ease;
+}
+.link-rubric::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  bottom: -3px;
+  height: 1px;
+  width: 100%;
+  background: var(--rubric);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.55s var(--ease-leaf);
+}
+[dir="rtl"] .link-rubric::after {
+  transform-origin: left;
+}
+.link-rubric:hover {
+  color: var(--vermilion);
+}
+.link-rubric:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+[dir="rtl"] .link-rubric:hover::after {
+  transform-origin: right;
+}
+
+/* Form fields: a ruled line on the page, inked on attention */
+.field-royal {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
+  border-radius: 0;
+  padding: 0.85rem 0;
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.5s ease;
+}
+.field-royal::placeholder {
+  color: color-mix(in srgb, var(--quiet) 70%, transparent);
+  font-style: italic;
+}
+[dir="rtl"] .field-royal::placeholder {
+  font-style: normal;
+}
+.field-royal:focus {
+  border-bottom-color: var(--rubric);
+}
+.field-royal:-webkit-autofill {
+  -webkit-text-fill-color: var(--ink);
+  -webkit-box-shadow: 0 0 0 1000px var(--ground) inset;
+  transition: background-color 9999s ease-out;
+}
+
+} /* end @layer components */

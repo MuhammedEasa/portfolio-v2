@@ -1,0 +1,37 @@
+# dependencies
+/node_modules/
+
+# next.js build output
+/.next/
+/out/
+/build/
+*.tsbuildinfo
+next-env.d.ts
+
+# environment & secrets
+.env
+.env*.local
+.env.example
+
+# deployment
+.vercel
+
+# os / editor
+.DS_Store
+Thumbs.db
+*.pem
+npm-debug.log*
+yarn-error.log*
+
+# source briefs, notes & secrets (not for the repo)
+# hi.txt, eg.txt, resend.txt, profile.txt …
+*.txt
+
+# QA + dev tooling (regenerated locally)
+/screens/
+/scripts/
+
+# client work — not part of the portfolio site
+/proposal/
+/profile_pages/
+*.pdf
